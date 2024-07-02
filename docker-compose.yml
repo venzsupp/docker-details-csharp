@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  csharp-api:
+    build: .
+    volumes:
+      - ./api:/var/www/html/api
+    tty: true
+    # ports:
+    #   - "5021:8080"
+  csharp-web:
+    image: nginx:latest
+    ports:
+        - "5021:8080"
+    volumes:
+        - ./api:/var/www/html/api
+        - ./site/site.conf:/etc/nginx/conf.d/site.conf
+    links:
+        - csharp-api
+  # csharp-db:
+  #   image: mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: 'hs_csharp_db'
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: master_user
+  #     MYSQL_PASSWORD: Platinum01#
+  # csharp-phpmyadmin:
+  #   image: phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - 8095:80
+  #   environment:
+  #     - PMA_ARBITRARY=1 
