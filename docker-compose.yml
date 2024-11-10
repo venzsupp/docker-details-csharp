@@ -3,19 +3,18 @@ services:
   csharp-api:
     build: .
     volumes:
-      - ./api:/var/www/html/api
-    tty: true
-    # ports:
-    #   - "5021:8080"
-  csharp-web:
-    image: nginx:latest
+      - ./webapi:/app
     ports:
-        - "5021:8080"
-    volumes:
-        - ./api:/var/www/html/api
-        - ./site/site.conf:/etc/nginx/conf.d/site.conf
-    links:
-        - csharp-api
+      - "5154:8080"
+  # csharp-web:
+  #   image: nginx:latest
+  #   ports:
+  #       - "5021:8080"
+  #   volumes:
+  #       - ./api:/var/www/html/api
+  #       - ./site/site.conf:/etc/nginx/conf.d/site.conf
+  #   links:
+  #       - csharp-api
   # csharp-db:
   #   image: mysql
   #   restart: always
