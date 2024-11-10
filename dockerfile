@@ -1,18 +1,18 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /var/www/html
-COPY ["api/api.csproj", "api/"]
-RUN dotnet restore "./api/./api.csproj"
+COPY ["webapi/webapi.csproj", "webapi/"]
+RUN dotnet restore "./webapi/./webapi.csproj"
 COPY . .
-WORKDIR "/var/www/html/api"
-RUN dotnet build "./api.csproj" -c %BUILD_CONFIGURATION% -o /app/build
+WORKDIR "/var/www/html/webapi"
+RUN dotnet build "./webapi.csproj" -c %BUILD_CONFIGURATION% -o /var/www/html/webapi/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./api.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./webapi.csproj" -c %BUILD_CONFIGURATION% -o /var/www/html/webapi/publish /p:UseAppHost=false
 
 FROM build AS final
-WORKDIR /app
+WORKDIR /var/www/html/webapi
 # EXPOSE 8080
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "api.dll"]
+COPY --from=publish /var/www/html/webapi/publish .
+ENTRYPOINT ["dotnet", "webapi.dll"]
